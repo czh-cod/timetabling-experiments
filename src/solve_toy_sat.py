@@ -1,4 +1,3 @@
-# src/solve_toy_sat.py
 from __future__ import annotations
 import os, time
 from pathlib import Path

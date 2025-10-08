@@ -1,6 +1,3 @@
-# src/run_experiments.py
-
-
 from __future__ import annotations
 import os
 import time
@@ -8,34 +5,29 @@ import subprocess
 from pathlib import Path
 from typing import List
 
-# ---- Paths ----
 BASE = Path(__file__).resolve().parents[1]
 SRC  = BASE / "src"
 DATA = BASE / "data"
 DATA.mkdir(parents=True, exist_ok=True)
 
-# ---- Experiment matrix (edit to your needs) ----
-# Instances: keep small first; later add real dataset slices
+
 INSTANCES: List[str] = ["toy01", "toy02", "toy03"]   # you can replace with your real cases
 SOLVERS = ["ILP", "SAT", "HYBRID"]                       # later: ["ILP", "SAT", "HYBRID"]
 VARIANTS:  List[str] = ["baseline"]                  # later: ["baseline", "heuristic"]
 SEEDS:     List[int] = [0, 1, 2]                     # later: expand to 5 or 10 if you have time
 
-# Time budget per run (seconds). Keep consistent across solvers for fair comparison.
 TIME_LIMITS = {
     "ILP": 600,          # 10 minutes
     "SAT": 300,          # 5 minutes
     "HYBRID": 600        # e.g., SAT warm-start then ILP
 }
 
-# Optional: extra parameters you want to pass to your solvers
 EXTRA = {
     "ILP":   {"variant_note": ""},
     "SAT":   {"variant_note": ""},
     "HYBRID":{"variant_note": "sat_warmstart_then_ilp"}
 }
 
-# ---- Helper to call a solver script via subprocess ----
 def run_one(instance: str, solver: str, variant: str, seed: int) -> int:
 
     env = os.environ.copy()
@@ -46,7 +38,6 @@ def run_one(instance: str, solver: str, variant: str, seed: int) -> int:
     env["EXP_TLIMIT"]   = str(TIME_LIMITS.get(solver, 300))
     env["EXP_NOTE"]     = EXTRA.get(solver, {}).get("variant_note", "")
 
-    # Choose script to run based on solver
     if solver == "ILP":
         script = SRC / "solve_toy_ilp.py"
     elif solver == "SAT":
@@ -58,16 +49,14 @@ def run_one(instance: str, solver: str, variant: str, seed: int) -> int:
     else:
         raise ValueError(f"Unknown solver: {solver}")
 
-    # Call the solver as a subprocess; stdout/stderr are shown in the console
     print(f"[RUN] inst={instance} | solver={solver} | variant={variant} | seed={seed}")
     t0 = time.time()
     try:
-        # Use your current Python interpreter
         subprocess.run(
             ["python", str(script)],
             check=True,
             env=env,
-            cwd=str(BASE)  # ensure relative paths inside solver are resolved from project root
+            cwd=str(BASE)
         )
         ret = 0
     except subprocess.CalledProcessError as e:

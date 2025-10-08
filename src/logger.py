@@ -1,4 +1,3 @@
-# src/logger.py
 import csv
 from pathlib import Path
 import time
