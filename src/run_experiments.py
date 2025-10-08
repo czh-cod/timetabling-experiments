@@ -17,7 +17,7 @@ DATA.mkdir(parents=True, exist_ok=True)
 # ---- Experiment matrix (edit to your needs) ----
 # Instances: keep small first; later add real dataset slices
 INSTANCES: List[str] = ["toy01", "toy02", "toy03"]   # you can replace with your real cases
-SOLVERS:   List[str] = ["ILP"]                       # later: ["ILP", "SAT", "HYBRID"]
+SOLVERS = ["ILP", "SAT", "HYBRID"]                       # later: ["ILP", "SAT", "HYBRID"]
 VARIANTS:  List[str] = ["baseline"]                  # later: ["baseline", "heuristic"]
 SEEDS:     List[int] = [0, 1, 2]                     # later: expand to 5 or 10 if you have time
 

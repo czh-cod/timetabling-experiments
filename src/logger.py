@@ -25,7 +25,6 @@ TIMELINE_HEADER = [
 
 
 def init_files():
-    """确保文件存在且有表头"""
     if not RUNS_FILE.exists():
         with open(RUNS_FILE, "w", newline="") as f:
             writer = csv.writer(f)
@@ -38,20 +37,12 @@ def init_files():
 
 
 def log_run(row):
-    """
-    记录一次完整运行的结果
-    row 必须是一个 list/tuple，顺序与 RUNS_HEADER 对应
-    """
     with open(RUNS_FILE, "a", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(row)
 
 
 def log_timeline(instance, solver, variant, seed, start_time, best_penalty):
-    """
-    记录某个时间点的最佳 penalty
-    start_time: 运行开始的时间戳 (time.time())
-    """
     now = time.time() - start_time
     with open(TIMELINE_FILE, "a", newline="") as f:
         writer = csv.writer(f)
